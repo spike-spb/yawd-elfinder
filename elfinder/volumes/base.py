@@ -4,7 +4,6 @@ try:
 except ImportError:
     import Image
 from base64 import b64encode, b64decode
-from string import maketrans
 from tarfile import TarFile
 from django.core.cache import cache
 from django.utils.translation import ugettext as _
@@ -191,7 +190,7 @@ class ElfinderVolumeDriver(object):
         else:
             raise Exception(_('No volume id found'))
         
-        self._root = self._normpath(unicode(self._options['path']))
+        self._root = self._normpath(str(self._options['path']))
         self._separator = self._options['separator'] if 'separator' in self._options else os.sep
 
         #default file attribute
@@ -374,8 +373,8 @@ class ElfinderVolumeDriver(object):
             'separator' : self._separator,
             'copyOverwrite' : int(self._options['copyOverwrite']),
             'archivers' : {
-                'create' : self._archivers['create'].keys(),
-                'extract' : self._archivers['extract'].keys()
+                'create' : list(self._archivers['create'].keys()),
+                'extract' : list(self._archivers['extract'].keys())
             }
         }
     
@@ -1092,7 +1091,7 @@ class ElfinderVolumeDriver(object):
             #hash is used as id in HTML that means it must contain vaild chars
             #make base64 html safe and append prefix in begining
             hash_ = hash_.encode('utf-8') # unicode filename support
-            hash_ = b64encode(hash_).translate(maketrans('+/=', '-_.'))
+            hash_ = b64encode(hash_).translate(bytes.maketrans(b'+/=', b'-_.')).decode('utf-8')
 
             #remove dots '.' at the end (used to be '=' in base64, before the translation)
             hash_ = hash_.rstrip('.')
@@ -1108,7 +1107,7 @@ class ElfinderVolumeDriver(object):
             #cut volume id after it was prepended in encode
             h = hash_[len(self.id()):]
             #replace HTML safe base64 to normal
-            h = h.encode('ascii').translate(maketrans('-_.', '+/='))
+            h = h.encode('ascii').translate(bytes.maketrans(b'-_.', b'+/=')).decode('ascii')
             #put cut = at the end
             h += "=" * ((4 - len(h) % 4) % 4)
             h = b64decode(h)
@@ -1791,9 +1790,9 @@ class ElfinderVolumeDriver(object):
         
         if dir_cache is None or root_cache != self._root:
             dir_cache = self._scandir(path)
-            if self._options['cache']:
-                self.logger.debug('%s: Caching DIR %s' % (self.id(), path))
-                cache.set(cache_key, dir_cache, self._options['cache'])
+            # if self._options['cache']:
+            #     self.logger.debug('%s: Caching DIR %s' % (self.id(), path))
+            #     cache.set(cache_key, dir_cache, self._options['cache'])
             if root_cache != self._root:
                 cache.set('elfinder::stat::%sroot' % self.id(), self._root, 60 * 60 * 24 * 10)
 

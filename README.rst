@@ -1,6 +1,8 @@
 yawd-elfinder, a file management solution for Django
 ====================================================
 
+(This fork is for Django 2.0).
+
 `elFinder`_ is a jQuery web file manager providing standard features -such as 
 uploading, moving, renaming files etc-, as well as a set of advanced features
 such as image resizing/cropping/rotation and archive file creation.
@@ -19,7 +21,7 @@ The current version is 0.90.03, use the github version for the latest fixes.
 
 .. note::
 	yawd-admin v0.90.03 is the last version intended to work with
-	Django 1.4. The current master is actively developed under Django 1.5
+	Django 1.4. The current master is actively developed under Django 2.0
 	and does NOT work with older Django releases. For those still using
 	Django 1.4, you can checkout the ``0.90.x`` branch or use the yawd-elfinder
 	v0.90.03 pypi package. New features will not be backported to the ``0.90.x``

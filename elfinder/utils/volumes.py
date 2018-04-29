@@ -1,4 +1,4 @@
-from django.utils.importlib import import_module
+from importlib import import_module
 from elfinder.conf import settings as ls 
 
 
@@ -26,7 +26,7 @@ def instantiate_driver(root_options):
     if 'driverInstance' in root_options and isinstance(root_options['driverInstance'], class_):
         return root_options['driverInstance']
 
-    if isinstance(class_, basestring) and class_:
+    if isinstance(class_, str) and class_:
         try:
             split = class_.split('.')
             storage_module = import_module('.'.join(split[:-1]))

@@ -6,7 +6,7 @@ except ImportError:
 from hashlib import md5
 from django.conf import settings
 from elfinder.exceptions import ElfinderErrorMessages, NotAnImageError, DirNotFoundError
-from base import ElfinderVolumeDriver
+from elfinder.volumes.base import ElfinderVolumeDriver
 
 class ElfinderVolumeLocalFileSystem(ElfinderVolumeDriver):
     """
@@ -26,8 +26,8 @@ class ElfinderVolumeLocalFileSystem(ElfinderVolumeDriver):
         #Required to count total archive files size
         self._archiveSize = 0
         
-        self._options['dirMode']  = 0755 #new dirs mode
-        self._options['fileMode'] = 0644 #new files mode
+        self._options['dirMode']  = 0o755 #new dirs mode
+        self._options['fileMode'] = 0o644 #new files mode
         
     #*********************************************************************#
     #*                        INIT AND CONFIGURE                         *#
@@ -176,7 +176,7 @@ class ElfinderVolumeLocalFileSystem(ElfinderVolumeDriver):
         """
         Attempt to read the file's mimetype
         """
-        return magic.Magic(mime=True).from_file(path.encode('utf-8')) #unicode filename support
+        return magic.Magic(mime=True).from_file(path.encode('utf-8')).decode('utf-8') #unicode filename support
     
     def _readlink(self, path):
         """

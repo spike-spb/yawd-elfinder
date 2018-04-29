@@ -7,3 +7,4 @@
 /build
 /example_project.db
 /*.pyc
+/.vscode
